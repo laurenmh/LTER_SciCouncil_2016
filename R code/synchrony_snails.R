@@ -105,6 +105,11 @@ pdf("Snail_synchrony_preliminary.pdf")
 
 # create a reverse-order X to have facet_grid match the quilt.plot
 out2$X2 <- (-out2$X)
+dat2$X2 <- (-dat2$X)
+
+ggplot(dat2, aes(x=year, y=abundance, color=species)) + geom_line() + facet_grid(X2~Y) + theme_bw() + labs(x = "Year", y= "Abundance", 
+title = "Snails abundance (count) over time
+on a sampling grid (m) at Luquillo")
 
 quilt.plot(synch2$Y, synch2$X, synch2$synchrony, nx=20, ny=20, main = "Synchrony (from 0-1) of snails
            on a sampling grid (m) at Luquillo")
