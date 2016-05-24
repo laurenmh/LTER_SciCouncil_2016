@@ -2,10 +2,11 @@ library(tidyr)
 library(dplyr)
 library(codyn)
 library(ggplot2)
+library(fields)
 
 # Snail data from Mike Willig (Luquillo)
 # only use data from the wet season
-dat <- read.csv("Long-term snail MNKA data.csv") %>%
+dat <- read.csv("~/Dropbox/LTER_synch_data/Long-term snail MNKA data.csv") %>%
   tbl_df() %>%
   filter(season == "w") 
 
@@ -93,9 +94,27 @@ ggplot(out2, aes(x=richness, y=synchrony)) + geom_point() + facet_wrap(X~Y, scal
 
 # Synchrony in relation to timestep
 ggplot(out2, aes(x=step, y=synchrony)) + geom_point()  + geom_smooth(aes(group = Point), se=F) + geom_smooth(color="black")
-ggplot(out2, aes(x=step, y=synchrony)) + geom_point() + facet_grid(X~Y) + geom_smooth()
+ggplot(out2, aes(x=step, y=synchrony)) + geom_point() + facet_grid(X~Y) + geom_smooth() + theme_bw()
 
 ## Nina and Lauren musings:
 ## does the mean of the synchrony equal the synchrony of the mean?
 ## does synchrony decay over space? obviously you can test for a population, but how should we test for a community?
 
+##PDF to share with group
+pdf("Snail_synchrony_preliminary.pdf")
+
+# create a reverse-order X to have facet_grid match the quilt.plot
+out2$X2 <- (-out2$X)
+
+quilt.plot(synch2$Y, synch2$X, synch2$synchrony, nx=20, ny=20, main = "Synchrony (from 0-1) of snails
+           on a sampling grid (m) at Luquillo")
+ 
+ggplot(out2, aes(x=step, y=synchrony)) + geom_point() + facet_grid(X2~Y) + geom_smooth() + theme_bw() +
+  labs(title = "Synchrony in moving 10-year windows
+on the Luquillo grid", x = "Time step (year)", y = "Synchrony")
+
+ggplot(out2, aes(x=step, y=totabund)) + geom_point() + facet_grid(X2~Y) + geom_smooth() + theme_bw() + 
+  labs(title = "Total abundance in moving 10-year windows
+on the Luquillo grid", x = "Time step (year)", y = "Total snail abundance")
+
+dev.off()
